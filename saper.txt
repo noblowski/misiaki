@@ -1,0 +1,1708 @@
+#include "stdafx.h"
+
+#include <iostream>
+
+#include <string>
+
+#include <ctime> // time()
+
+#include <conio.h> // zawiera funkcja getch()
+
+#include <Windows.h> // zawiera funkcje Sleep()
+
+#include <fstream>
+
+
+using namespace std; // otwarcie przestrzeni nazw
+
+
+//#############################################################################################/
+
+// zmienne globalne
+
+int ry, rx; // ry - rozmiar na osi y (liczba wierszy), rx - rozmiar na osi x (liczba kolumn)
+
+int liczba_min; // zawiera informacje o liczbie min na planszy
+
+string imie; // imie gracza
+
+int liczba_flag;
+
+
+char **tab0; // tablica ukryta zawierajaca bomby itd
+
+char **tab1; // tablica ktora widzi gracz
+
+
+//#############################################################################################/
+
+// funkcje w programie
+
+void color(int i=0);
+
+void clear_screen();
+
+void menu_drugie(int parametr);
+
+void menu_glowne(int i=0);
+
+void run_game(int komunikat=0);
+
+void odslon_pola_wokol(int zi, int zx);
+
+
+//#############################################################################################/
+
+//#############################################################################################/
+
+
+// Funkcja main
+
+int _tmain(int argc, _TCHAR* argv[])
+
+{	
+
+    
+
+    //intro
+
+cout<<"     _______.     ___      .______    _______ .______ n";
+
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+
+cout<<"    /       |    /   \     |   _  \  |   ____||   _  \ n";
+
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
+
+cout<<"   |   (----`   /  ^  \    |  |_)  | |  |__   |  |_)  | n"; 
+
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+
+cout<<"    \   \      /  /_\  \   |   ___/  |   __|  |      / n";   
+
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+
+cout<<".----)   |    /  _____  \  |  |      |  |____ |  |\  \----. n";
+
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+
+cout<<"|_______/    /__/     \__\ | _|      |_______|| _| `._____|";
+
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+
+cout<<"nn2009 (c) webook.pl";
+
+color();
+
+        
+
+    cout<<"nnnnloading";
+
+    for(int i=0; i<10; i++) {
+
+        cout<<".";
+
+        Sleep(500);
+
+    }
+
+    
+
+    menu_glowne();
+
+
+    //cout<<"nn";
+
+    //system("pause");
+
+    return 0;
+
+}
+
+
+//#############################################################################################/
+
+//#############################################################################################/
+
+
+//#############################################################################################/
+
+// Funkcje programu
+
+
+void color(int i) { // funkcja wlacza kolorowanie napisow drukowanych przez cout
+
+    if(i==1) { // czerwony
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
+
+    } else if(i==2) { // bialy
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);	
+
+    } else if(i==3) { // zielony
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN); 
+
+    } else if(i==4) { // niebieski
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_BLUE); 	
+
+    } else if(i==5) { // czarno na bialym
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | FOREGROUND_INTENSITY | BACKGROUND_GREEN | BACKGROUND_BLUE); 
+
+    } else { // domyslny kolor tekstu w konsoli
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+
+    }
+
+}
+
+
+/**********************************************************************************************/
+
+
+int get_int(string strConvert) {
+
+    int intReturn;
+
+    //http://www.techbytes.ca/techbyte99.html
+
+     // NOTE: You should probably do some checks to ensure that
+
+     // this string contains only numbers. If the string is not
+
+     // a valid integer, zero will be returned.
+
+     intReturn = atoi(strConvert.c_str());
+
+
+     return(intReturn);
+
+}
+
+
+/**********************************************************************************************/
+
+
+void clear_screen() { // czyscimy ekran i pozostawiamy tylko linie z nazwa programu
+
+    system("cls");
+
+    
+
+    color();
+
+    cout<<"====== Saper v1.01 08.01.2010 Webook.pl ======n";	
+
+        //<<"Legenda:n"
+
+    color(2);
+
+    cout<<"Strzalki";
+
+    color();
+
+    cout<<" - sterowanie w menu gry i po planszyn"; // 75-lewo 77-prawo 72-gora 80-dol
+
+    color(2);
+
+    cout<<"Spacja";
+
+    color();
+
+    cout<<" - odslon pole,        "; //32
+
+    color(2);
+
+    cout<<"ESC";
+
+    color();
+
+    cout<<" - wyjscie do menun"; //27
+
+    color(2);	
+
+    cout<<"?";
+
+    color();
+
+    cout<<" - pytajnik (klawisz V)     "; //118-v 
+
+    color(2);
+
+    cout<<"F";
+
+    color();
+
+    cout<<" - flaga (klawisz F),  "; //102-f
+
+    color(2);
+
+    cout<<char(42);
+
+    color();
+
+    cout<<" - minan";	//42 - mina
+
+    color(2);		
+
+    cout<<char(219);
+
+    color();
+
+    cout<<" - zasloniete pole,         ";
+
+    color(2);
+
+    cout<<char(176);
+
+    color();
+
+    cout<<" - odsloniete puste polen"		
+
+        <<"=============================================================nn";
+
+}
+
+
+/**********************************************************************************************/
+
+
+void menu_glowne(int i) 
+
+{
+
+    clear_screen();	
+
+    
+
+    char nawigacja;
+
+
+    cout<<"MENU:nWybierz pozycje za pomoca strzalek i entera.n" //enter - odczytujemy jako powrot karetki znak 13 http://www.asciitable.com/
+
+        << "n- NOWA GRA ";
+
+        if(i == 0) {
+
+            color(1);
+
+            cout<<"          <---";
+
+            color();
+
+        }
+
+    cout<< "n- LISTA ROZGRYWEK  ";
+
+        if(i == 1) {
+
+            color(1);
+
+            cout<<" <---";
+
+            color();
+
+        }
+
+    cout<< "n- WYJSCIE ";
+
+        if(i == 2) {
+
+            color(1);
+
+            cout<<"         <---n"; // znak zachety ponizej
+
+            color();
+
+        } else {
+
+            cout<<endl; // przesuwa znak zachety ponizej menu, by bylo estetycznie
+
+        }
+
+
+    
+
+    do {
+
+        nawigacja = _getch(); // pobiera znak tak dlugo az zostana wcisniete strzalki gora/dol lub enter
+
+    } while(nawigacja!=80 && nawigacja!=72 && nawigacja!=13);
+
+        
+
+
+    if(nawigacja == 80) { // w dol
+
+        if(i >= 2) {
+
+            i = 0;
+
+        } else {
+
+            i++;
+
+        }
+
+        menu_glowne(i);
+
+    } else if(nawigacja == 72) { // w gore
+
+        if(i <= 0) {
+
+            i = 2;
+
+        } else {
+
+            i--;
+
+        }
+
+        menu_glowne(i);
+
+    } else if(nawigacja == 13) { //enter
+
+        if(i != 2) { // jesli nie wybrano wyjscia to wlacz dane podmenu
+
+            menu_drugie(i);
+
+        }
+
+    } else {
+
+        menu_glowne(i);
+
+    }
+
+    
+
+}
+
+
+/**********************************************************************************************/
+
+
+void menu_drugie(int parametr) {
+
+    
+
+    if(parametr == 0) { //nowa gra
+
+        
+
+        clear_screen();
+
+        cout<<"Podaj swoje imie i nacisnij enter: ";		
+
+        cin>>imie;
+
+        
+
+        int i=0; // domyslnie ustalona strzalka w menu na pozycji 0
+
+        char nawigacja;
+
+
+        do {
+
+            clear_screen();
+
+            
+
+            cout<<"Wybierz rozmiar planszy:n" //enter - odczytujemy jako powrot karetki znak 13 http://www.asciitable.com/
+
+                << "n- plansza 9x9, liczba min: 10 ";
+
+            if(i == 0) {
+
+                color(1);
+
+                cout<<"      <---";
+
+                color();
+
+            }
+
+            cout<< "n- plansza 16x16, liczba min: 40 ";
+
+            if(i == 1) {
+
+                color(1);
+
+                cout<<"   <---";
+
+                color();
+
+            }
+
+            cout<< "n- plansza 16x30, liczba min: 99 ";
+
+            if(i == 2) {
+
+                color(1);
+
+                cout<<"  <---";
+
+                color();
+
+            }
+
+            cout<< "n- plansza ustalona przez gracza ";
+
+            if(i == 3) {
+
+                color(1);
+
+                cout<<" <---n";
+
+                color();
+
+            } else {
+
+                cout<<endl; // znak zachety ponizej
+
+            }
+
+    
+
+            
+
+            do {
+
+                nawigacja = _getch(); // pobiera znak tak dlugo az zostana wcisniete strzalki gora/dol lub enter lub ESC(27)
+
+            } while(nawigacja!=80 && nawigacja!=72 && nawigacja!=13 && nawigacja!=27);
+
+            
+
+            if(nawigacja == 80) { // w dol
+
+                if(i >= 3) {
+
+                    i = 0;
+
+                } else {
+
+                    i++;
+
+                }				
+
+            } else if(nawigacja == 72) { // w gore
+
+                if(i <= 0) {
+
+                    i = 3;
+
+                } else {
+
+                    i--;
+
+                }
+
+            } else if(nawigacja == 27) { // ESC - wyjscie do menu glownego
+
+                menu_glowne();
+
+            } else if(nawigacja == 13) { //enter, wlaczenie trybu gry o danym numerze w zmiennej i
+
+                
+
+                clear_screen();
+
+                if(i == 0) { // 9x9
+
+                    ry=rx=9;
+
+                    liczba_min = 10;
+
+                } else if(i == 1) { //16x16
+
+                    ry=rx=16;
+
+                    liczba_min = 40;
+
+                } else if(i == 2) { //16x30
+
+                    ry = 16; // wierszy
+
+                    rx = 30; // kolumn
+
+                    liczba_min = 99;
+
+                } else { // plansza ustalona przez uzytkownika
+
+                    
+
+                    string p_string; // pomocniczy string, do tej zmiennej wczytujemy numery pol, pozniej rzutujemy string na int dziek itemu unikniemy zawieszenia programu w przypadku gdy ktos zamiast liczby poda jakis ciag znakow
+
+                    
+
+
+                    // pobieramy liczbe wierszy tak dlugo az bedzie wieksza od 1 i <=1000, plansza moze byc conajmniej 2x2, max 1000x1000
+
+                    int komunikat_iw=0;
+
+                    do {						
+
+                        if(komunikat_iw) {
+
+                            cout<<"Podaj ilosc wierszy dla planszy (przedzial 2-1000): ";
+
+                        } else {
+
+                            cout<<"Podaj ilosc wierszy dla planszy: ";
+
+                        }
+
+                        cin.ignore(1000, 'n');
+
+                        cin >> p_string;
+
+                        ry = get_int(p_string);
+
+                        komunikat_iw++;
+
+                    } while(ry<=1 || ry >1000);
+
+                    
+
+                    // pobieramy liczbe kolumn tak dlugo az bedzie wieksza od 1 i mniejsza badz rowna 1000
+
+                    int komunikat_ik=0;
+
+                    do {						
+
+                        if(komunikat_ik) {
+
+                            cout<<"Podaj ilosc kolumn (przedzial 2-1000): ";
+
+                        } else {							
+
+                            cout<<"Podaj ilosc kolumn: ";
+
+                        }
+
+                        cin.ignore(1000, 'n');
+
+                        cin >> p_string;
+
+                        rx = get_int(p_string);
+
+                        komunikat_ik++;
+
+                    } while(rx<=1 || rx >1000);
+
+                    
+
+                    cout<<"nMozesz podac liczbe min na planszy w tym celu kliknij: Ln"
+
+                        <<"Mozesz rowniez podac procentowa liczbe min, wcisnij: Pn";
+
+                    char nawigacja_wybor_min;
+
+                    do {
+
+                        nawigacja_wybor_min = _getch();
+
+                    } while(nawigacja_wybor_min!=108 && nawigacja_wybor_min!=112); //108-L 112-P
+
+                    
+
+                    // wybrano opcje podania liczby min na planszy
+
+                    if(nawigacja_wybor_min == 108) {
+
+
+                        cout << "nPodaj ilosc min na planszy: ";
+
+                        int a=0;
+
+                        int max_min = ry*rx;
+
+                        do {
+
+                            if(a>0 && (liczba_min<=0 || liczba_min>=max_min)) {
+
+                                cout<<"nUwaga: Liczba min musi byc wieksza od 0 i mniejsza od "<<max_min<<": ";
+
+                            }
+
+                            cin.ignore(1000, 'n');						
+
+                            cin >> p_string;
+
+                            liczba_min = get_int(p_string);
+
+                            
+
+                            a++;
+
+                            
+
+                        } while(liczba_min<=0 || liczba_min>=max_min);
+
+                        /*cout<<"ry: "<<ry<<endl;
+
+                        cout<<"rx: "<<rx<<endl;
+
+                        cout<<"liczba_min: "<<liczba_min<<endl;
+
+                        Sleep(5000);*/
+
+                        
+
+    
+
+                    // wybrano opcje podania procentowo liczby min na planszy
+
+                    } else if(nawigacja_wybor_min == 112) {
+
+
+                        cout << "nPodaj procent min na planszy (zakres od 0-100): ";
+
+                        int a=0;
+
+                        int max_min = ry*rx;
+
+                        do {
+
+                            if(a>0 && (liczba_min<=0 || liczba_min>=max_min)) {
+
+                                cout<<"nUwaga: Liczba min musi byc wieksza od 0 i mniejsza od "<<max_min<<".nPodaj inny procent min na planszy: ";
+
+                            }
+
+                            cin.ignore(1000, 'n');						
+
+                            cin >> p_string;
+
+                            int procent_min = get_int(p_string);
+
+                            
+
+                            liczba_min = (max_min*procent_min)/100;
+
+
+                            cout<<"Liczba wyliczonych min (po obcieciu liczb po przecinku): "<<liczba_min<<"";
+
+                            a++;
+
+                            
+
+                        } while(liczba_min<=0 || liczba_min>=max_min);
+
+                        // pauzujemy na 5s aby mozna bylo odczytac komunikat o liczbie min
+
+                        cout<<"nnczekaj";
+
+                        for(int i=0; i<10; i++) {
+
+                            cout<<".";
+
+                            Sleep(500);
+
+                        }
+
+
+                    }
+
+
+                    //clear_screen();
+
+                }
+
+                
+
+
+                tab0 = new char*[ry];
+
+                tab1 = new char*[ry];
+
+                for(int i=0; i<ry; i++) {
+
+                    *(tab0+i) = new char[rx];
+
+                    *(tab1+i) = new char[rx];
+
+                    
+
+                    for(int x=0; x<rx; x++) {
+
+                        tab0[i][x] = char(176); // wstawiamy do tablicy ukrytej znaczek pola odslonietego, niektore z tych pol nadpiszemy minami i numerkami o liczbie min wokolo
+
+                        tab1[i][x] = char(219); // wstawiamy do tablicy widocznej dla gracza znaczek zaslonietego pola						
+
+                    }
+
+                }
+
+
+                // losujemy i wstawiamy miny do ukrytej planszy
+
+                int losowe_pole_y;
+
+                int losowe_pole_x;
+
+                int i=0;
+
+                srand(time(NULL)); // inicjujemy ziarno dla generatora liczb losowych
+
+                do {					
+
+                    losowe_pole_y = rand()%ry;
+
+                    losowe_pole_x = rand()%rx;
+
+                    if(tab0[losowe_pole_y][losowe_pole_x] != char(42)) { // jesli w wylosowanym polu nie ma jeszcze miny to wstawiamy tam mine
+
+                        tab0[losowe_pole_y][losowe_pole_x] = char(42); // wstawiamy mine do wylosowanego pola
+
+                        //cout<<losowe_pole_y<<", x: "<<losowe_pole_x<<endl;
+
+                        i++;
+
+                    }
+
+                    //cout<<"        "<<i<<" ----- "<<losowe_pole_y<<", x: "<<losowe_pole_x<<endl;
+
+                } while(i<liczba_min);
+
+                
+
+
+                //wstawiamy do planszy ukrytej liczby o minach znajdujacych sie wokolo
+
+                int zi, zx; // zmienne do operowania wokol pola, ktorego szukamy miny
+
+                int z_miny; // liczba znalezionych min wokol pola
+
+                for(int i=0; i<ry; i++) {					
+
+                    for(int x=0; x<rx; x++) {
+
+                        z_miny=0; // resetujemy liczbe min wokol pola
+
+                        
+
+                        if(tab0[i][x]!=42) { // pole dla ktorego liczby liczbe min wokol nie moze byc mina
+
+
+                            //# Sprawdzamy 3 pola nad komorka i,x
+
+                            zi=i-1; // pole wyzej
+
+                            if(zi>=0) {
+
+                                if(tab0[zi][x]==42) { // jesli w tym polu jest mina to zwiekszamy licznik min
+
+                                    z_miny++;
+
+                                }
+
+    
+
+                                zx=x+1; // pole wyzej i jedna komorka w prawo
+
+                                if(zx<rx) { // kolumna nie moze wystawac poza plansze
+
+                                    if(tab0[zi][zx]==42) {
+
+                                        z_miny++;
+
+                                    }
+
+                                }
+
+                                zx=x-1; // pole wyzej i jedna komorka w lewo
+
+                                if(zx>=0) { // kolumna nie moze wystawac poza plansze
+
+                                    if(tab0[zi][zx]==42) {
+
+                                        z_miny++;
+
+                                    }
+
+                                }
+
+                            }
+
+                            
+
+    
+
+                            //# Sprawdzamy pola po prawej i lewej nad komorka i,x
+
+                            zx=x+1; // jedna komorka w prawo
+
+                            if(zx<rx) { 
+
+                                if(tab0[i][zx]==42) { // jesli w tym polu jest mina to zwiekszamy licznik min
+
+                                    z_miny++;
+
+                                }
+
+                            }
+
+    
+
+                            zx=x-1; // jedna komorka w lewo
+
+                            if(zx>=0) { 
+
+                                if(tab0[i][zx]==42) { // jesli w tym polu jest mina to zwiekszamy licznik min
+
+                                    z_miny++;
+
+                                }
+
+                            }
+
+                            
+
+    
+
+                            //# Sprawdzamy 3 pola pod komorka i,x
+
+                            zi=i+1; // pole wyzej
+
+                            if(zi<ry) {
+
+                                if(tab0[zi][x]==42) { // jesli w tym polu jest mina to zwiekszamy licznik min
+
+                                    z_miny++;
+
+                                }
+
+    
+
+                                zx=x+1; // pole nizej i jedna komorka w prawo
+
+                                if(zx<rx) { // kolumna nie moze wystawac poza plansze
+
+                                    if(tab0[zi][zx]==42) {
+
+                                        z_miny++;
+
+                                    }
+
+                                }
+
+                                zx=x-1; // pole nizej i jedna komorka w lewo
+
+                                if(zx>=0) { // kolumna nie moze wystawac poza plansze
+
+                                    if(tab0[zi][zx]==42) {
+
+                                        z_miny++;
+
+                                    }
+
+                                }
+
+                            }	
+
+    
+
+                        
+
+                            // jesli liczba min wokol pola jest wieksza niz 0 to wstawiamy numerek do pola i,x o liczbie min wokolo
+
+                            switch(z_miny) {
+
+                                case 1:
+
+                                    tab0[i][x] = '1';
+
+                                    break;
+
+                                case 2:
+
+                                    tab0[i][x] = '2';
+
+                                    break;
+
+                                case 3:
+
+                                    tab0[i][x] = '3';
+
+                                    break;
+
+                                case 4:
+
+                                    tab0[i][x] = '4';
+
+                                    break;
+
+                                case 5:
+
+                                    tab0[i][x] = '5';
+
+                                    break;
+
+                                case 6:
+
+                                    tab0[i][x] = '6';
+
+                                    break;
+
+                                case 7:
+
+                                    tab0[i][x] = '7';
+
+                                    break;
+
+                                case 8:
+
+                                    tab0[i][x] = '8';
+
+                                    break;
+
+                                case 9:
+
+                                    tab0[i][x] = '9';
+
+                                    break;
+
+                            }
+
+
+                        }
+
+                    }
+
+                    
+
+                }
+
+                
+
+                
+
+                
+
+                // podglad ukrytej planszy
+
+                /*cout<<"nn";
+
+                for(int i=0; i<ry; i++) {					
+
+                    for(int x=0; x<rx; x++) {
+
+                        cout<<tab0[i][x]<<" "; 
+
+                    }
+
+                    cout<<"nn";
+
+                }*/
+
+
+                liczba_flag = liczba_min;
+
+                run_game();
+
+
+                
+
+            } else {
+
+                cout<<"(Error 1) Nieoczekiwany blad programu!";
+
+            }
+
+
+        } while(nawigacja!=13); // wykonuje obsluge menu az do momentu wcisniecia entera
+
+    
+
+        
+
+
+    } else if(parametr == 1) { // lista rozgrywek
+
+        
+
+        clear_screen();	
+
+        
+
+        color(2);
+
+        cout<<"LISTA ROZGRYWEK:nNa zielono oznaczone sa wygrane, a przegrane na czerwono.nRozgrywki sa posortowane od najstarszej do najnowszej.nn";
+
+        color();
+
+        
+
+        // przed odczytem otwieramy plik tak jakbysmy chcieli cos dopisac ale nic nie dopiszemy dzieki temu nieistniejacy plik zostanie utworzony
+
+        fstream plik;
+
+        plik.open("saper_log.txt", ios::app);		
+
+        plik.close();
+
+
+        // odczyt
+
+        ifstream ifile("saper_log.txt");
+
+    
+
+        string drukuj_linie;		
+
+        int wierszy_pliku=1;		
+
+        while(!ifile.eof()) {
+
+            getline(ifile,drukuj_linie);			
+
+            if(drukuj_linie[0]=='P') { // jesli pierwsza litera jest P to znaczy ze ciag zaczyna sie na slowo PRZEGRANA wiec kolorujemy na czerwono
+
+                color(1);
+
+                cout<<wierszy_pliku<<". "<<drukuj_linie<<"nn";
+
+                color();
+
+            } else {
+
+                color(3); // kolorujemy na zielono jesli wygrana
+
+                cout<<wierszy_pliku<<". "<<drukuj_linie<<"nn";
+
+                color();
+
+            }
+
+            wierszy_pliku++;
+
+        }
+
+        ifile.close();
+
+        cout<<"  To miejsce czeka na Ciebie! Przejdz do nowej gry!!";
+
+
+        cout<<"nnNacisnij enter aby przejsc do menu glownego.";
+
+        char nawigacja;
+
+        do {
+
+            nawigacja = _getch(); // pobiera znak enter/spacja lub ESC(27) aby wyjsc do menu
+
+        } while(nawigacja!=13 && nawigacja!=32 && nawigacja!=27);
+
+
+        menu_glowne();
+
+
+    }
+
+
+}
+
+
+/**********************************************************************************************/
+
+
+void run_game(int komunikat) {
+
+    static int liczba_ruchow=0; // zawiera informacje ile razy wcisnieto strzalke
+
+    static int liczba_odsloniec=0; // zawiera info ile razy wcisnieto spacje aby odslonic pole
+
+    static long czas_startu_gry;
+
+    static int zi,zx; // zmienne sluzace do okreslania podswietlonego elementu
+
+    char nawigacja;
+
+    static long czas_gry=0;
+
+    
+
+    clear_screen();
+
+    color(2);
+
+    
+
+    if(liczba_ruchow==0) {
+
+        zi=zx=0; // domyslnie ustalona pozycja podswietlonego elementu
+
+        cout<<"Uzyj strzalek do nawigacji po planszy.nn";
+
+    }
+
+
+    
+
+    if(liczba_odsloniec>=1) { // obliczamy czas gry dopiero po pierwszym ruchu
+
+        czas_gry = time(NULL)-czas_startu_gry;
+
+    }
+
+    
+
+    string komunikat_do_pliku; // zawiera text o wygranej lub przegranej doklejany do pliku saper_log.txt
+
+    if(komunikat == 1) { // przegrana -koniec gry
+
+        int o_zi, o_zx; // wspolrzedne miny ktora odslonilismy i ktora spowodowala nasza przegrana 
+
+        for(int i=0; i<ry; i++) {					
+
+            for(int x=0; x<rx; x++) {
+
+                if(tab1[i][x] == char(42)) { // kolorujemy na niebiesko mine na ktora gracz odslonil i kotra jest przyczyna przegranej
+
+                    color(4);
+
+                    cout<<tab1[i][x]<<" ";
+
+                    color(2);
+
+                    o_zi=i;
+
+                    o_zx=x;
+
+                } else {
+
+                    cout<<tab1[i][x]<<" "; 
+
+                }
+
+            }
+
+            cout<<"nn";
+
+        }
+
+        color(1);
+
+        cout<<"PRZEGRANA ";
+
+        color(2);
+
+        for(int i=0; i<10; i++) { // przez kilka sekund wyswietlamy powyzsza plansze po czym resetujemy ekran i odslaniamy wszystkie miny kolorujac je na czerwono a odslonieto przez nas mine na niebiesko
+
+            cout<<".";
+
+            Sleep(500);
+
+        }
+
+        clear_screen();
+
+        color(2);
+
+        for(int i=0; i<ry; i++) {					
+
+            for(int x=0; x<rx; x++) {
+
+                if(tab0[i][x] == char(42)) { // kolorujemy na niebiesko mine na ktora gracz odslonil i kotra jest przyczyna przegranej, a reszte min na czerwono
+
+                    if(i==o_zi && x==o_zx) {
+
+                        color(4);
+
+                        cout<<tab0[i][x]<<" ";
+
+                        color(2);
+
+                    } else {
+
+                        color(1);
+
+                        cout<<tab0[i][x]<<" ";
+
+                        color(2);
+
+                    }
+
+                } else {
+
+                    cout<<tab0[i][x]<<" "; 
+
+                }
+
+            }
+
+            cout<<"nn";
+
+        }
+
+        color(1);
+
+        cout<<"PRZEGRANA: "; 
+
+        color(2);
+
+        cout<<"Niebieska mina stala sie przyczyna Twojej porazki.nn";
+
+        
+
+        komunikat_do_pliku = "PRZEGRANA";
+
+        
+
+    } else if(komunikat == 2) { // wygrana - koniec gry
+
+        for(int i=0; i<ry; i++) {					
+
+            for(int x=0; x<rx; x++) {
+
+                if(tab0[i][x] == char(42)) { // kolorujemy na zielono wszystkie miny
+
+                    color(3);
+
+                    cout<<tab0[i][x]<<" ";
+
+                    color(2);					
+
+                } else {
+
+                    cout<<tab0[i][x]<<" "; 
+
+                }
+
+            }
+
+            cout<<"nn";
+
+        }
+
+        color(3);
+
+        cout<<"WYGRANA! Gratulacje!nn"; 
+
+        color(2);
+
+
+        komunikat_do_pliku = "WYGRANA";
+
+    }
+
+
+    if(komunikat == 1 || komunikat == 2) {
+
+        
+
+        cout<<"Czas gry: "<<czas_gry<<"s, Liczba min: "<<liczba_flag<<", Odkryc: "<<liczba_odsloniec<<", Ruchow: "<<liczba_ruchow;
+
+        
+
+        
+
+
+        // dopisanie wyniku do pliku
+
+        fstream plik;
+
+        plik.open("saper_log.txt", ios::app);
+
+        plik <<komunikat_do_pliku<<" GRACZA: "<<imie<<" | CZAS GRY: "<<czas_gry<<"s | TRYB: min: "<<liczba_min<<", plansza: "<<ry<<"x"<<rx<<" | STATY: odslonietych pol: "<<liczba_odsloniec<<", ruchow strzalkami: "<<liczba_ruchow<<endl;	
+
+        plik.close();
+
+        
+
+        
+
+
+        //nalezy zresetowac liczbe ruchow i odsloniec na koniec gry
+
+        liczba_ruchow=liczba_odsloniec=0;
+
+
+        //niszczymy tablice dynamiczna
+
+        for ( int i=0; i<ry; ++i ) {
+
+            delete [] tab0[i];
+
+            delete [] tab1[i];
+
+        }
+
+        delete [] tab0;
+
+        delete [] tab1;
+
+
+        
+
+        color();
+
+        cout<<"nnNacisnij enter aby przejsc do menu, gdzie sprawdzisz liste rozgrywek.";
+
+        do {
+
+            nawigacja = _getch(); // pobiera znak enter/spacja lub ESC(27) aby wyjsc do menu
+
+        } while(nawigacja!=13 && nawigacja!=32 && nawigacja!=27);
+
+
+        menu_glowne();
+
+    }
+
+    
+
+    if(komunikat==0) {
+
+
+    for(int i=0; i<ry; i++) {					
+
+        for(int x=0; x<rx; x++) {
+
+            if(zi==i && zx==x) { // kolorujemy na czerwono element na ktorym jest zaznaczony
+
+                color(1);
+
+                cout<<tab1[i][x]<<" ";
+
+                color(2);
+
+            } else if(tab1[i][x]=='F' || tab1[i][x]=='?') {
+
+                color(5);
+
+                cout<<tab1[i][x];
+
+                color(2);
+
+                cout<<" ";
+
+            } else {
+
+                cout<<tab1[i][x]<<" "; 
+
+            }
+
+        }
+
+        cout<<"nn";
+
+    }
+
+    
+
+    cout<<"Czas gry: "<<czas_gry<<"s, Liczba min: "<<liczba_flag<<", Odkryc: "<<liczba_odsloniec<<", Ruchow: "<<liczba_ruchow;
+
+
+    
+
+    do {
+
+        nawigacja = _getch(); // pobiera znak tak dlugo az zostana wcisniete strzalki gora/dol/lewo/prawo lub enter/spacja lub ESC(27), 102-F 118-V
+
+    } while(nawigacja!=80 && nawigacja!=72 && nawigacja!=75 && nawigacja!=77 && nawigacja!=13 && nawigacja!=32 && nawigacja!=27 && nawigacja!=102 && nawigacja!=118);
+
+            
+
+    if(nawigacja == 80) { // w dol		
+
+        if(zi == (ry-1)) { // jesli obecnie podswietlone pole jest ustawione na ostatnim wierszu to klikniecie w dol oznacza przeskoczenie do pierwszego wiersza
+
+            zi = 0;
+
+        } else {
+
+            zi++;
+
+        }
+
+        liczba_ruchow++;
+
+        run_game();		
+
+    } else if(nawigacja == 72) { // w gore
+
+        if(zi == 0) { // jesli jestesmy w pierwszym wierszu to strzalka w gore przesuwa nas na ostatni wiersz
+
+            zi = ry-1; // -1 bo tablica jest od indexu 0
+
+        } else {
+
+            zi--;
+
+        }
+
+        liczba_ruchow++;
+
+        run_game();	
+
+    } else if(nawigacja == 75) { // w lewo
+
+        if(zx == 0) { // jesli jestem w pierwszej kolumnie to po wcisnieciu strzalki w lewo przenosi mnie do ostatniej kolumny
+
+            zx = rx-1;
+
+        } else {
+
+            zx--;
+
+        }
+
+        liczba_ruchow++;		
+
+        run_game();	
+
+    } else if(nawigacja == 77) { // w prawo
+
+        if(zx == (rx-1)) { // jesli jestem w ostatniej kolumie to strzalka w prawo przenosi mnie do pierwszej
+
+            zx = 0;
+
+        } else {
+
+            zx++;
+
+        }
+
+        liczba_ruchow++;
+
+        run_game();	
+
+    } else if(nawigacja == 27) { // ESC - wyjscie do menu glownego
+
+        liczba_ruchow=liczba_odsloniec=czas_gry=0; 
+
+        menu_glowne();
+
+    } else if(nawigacja == 32 || nawigacja == 13) { //spacja lub enter sluzy do odslaniania pola
+
+        liczba_ruchow++;
+
+
+        if(tab1[zi][zx] != tab0[zi][zx]) { // jesli po raz pierwszy odslaniamy pole
+
+            liczba_odsloniec++;
+
+            // operacja odsloniecia
+
+            if(liczba_odsloniec==1) { // jesli po raz pierwszy odslonieto pole to od tego momentu liczymy czas
+
+                czas_startu_gry = time(NULL);
+
+            }
+
+
+            if(tab0[zi][zx] != char(42)) { // odsloniamy pole ktore nie jeste mina
+
+                
+
+                odslon_pola_wokol(zi, zx);
+
+
+                // wykonujemy sprawdzenie czy wygrano juz gre
+
+                int czy_wygrano=1; // 1 - tak, jesli zmienna zawiera 0 to znaczy ze ktores pole nie zawierajace miny jest nie odkryte				
+
+                for(int i=0; i<ry; i++) {					
+
+                    if(czy_wygrano) {
+
+                        for(int x=0; x<rx; x++) {
+
+                            if(tab0[i][x] != char(42)) { // jesli pole nie jest mina to sprawdzamy czy zostalo odkryte
+
+                                if(tab1[i][x] != tab0[i][x]) { // jesli odkryte pole jest rozne od ukrytego to znaczy ze jeszcze cala plansza nie zostala odkryta
+
+                                    czy_wygrano=0;
+
+                                    break; // przerywamy sprawdzenie poniewaz jesli jakies pole jest nie odkryte to automatycznie nie ma sensu dalsze sprawdzanie
+
+                                }
+
+                            }						
+
+                        }
+
+                    } else {
+
+                        break; // przerywamy sprawdzenie jesli zmieniono wartosc czy_wygrano na 0
+
+                    }
+
+                }
+
+                
+
+                if(czy_wygrano) {
+
+                    run_game(2); // parametr 2 - wygrana koniec gry 	
+
+                } else {
+
+                    run_game();	
+
+                }
+
+
+            } else if(tab0[zi][zx] == char(42)) { //mina - koniec gry
+
+                tab1[zi][zx] = tab0[zi][zx];				
+
+                run_game(1); // parametr 1 - przegrana koniec gry
+
+            }
+
+        } else { // odlaniamy pole kotre jest juz odsloniete wiec nic nie robimy tylko odswiezamy plansze
+
+            run_game();	
+
+        }
+
+        
+
+    } else if(nawigacja == 102) { // F - wstawiamy flage
+
+        if(tab1[zi][zx] == char(219) || tab1[zi][zx] == '?') { // jesli pole jest zasloniete lub jest na nim pytajnik to wstawiamy na nie F
+
+            tab1[zi][zx] = 'F';
+
+            liczba_flag--;
+
+        } else if(tab1[zi][zx] == 'F') { // jesli na polu jest juz flaga to ja zdejmujemy
+
+            tab1[zi][zx] = 219; // ustawiamy zasloniete pole
+
+            liczba_flag++;
+
+        }		
+
+        liczba_ruchow++;
+
+        run_game();
+
+    } else if(nawigacja == 118) { // V - wstawiamy pytajnik
+
+        if(tab1[zi][zx] == char(219)) { // jesli pole jest zasloniete to wstawiamy na niego pytajnik
+
+            tab1[zi][zx] = '?';
+
+        } else if(tab1[zi][zx] == 'F') { // jesli jest na polu flaga to wstawiamy na niego pytajnik i zwiekszamy liczbe dostepnych flag
+
+            tab1[zi][zx] = '?';
+
+            liczba_flag++;
+
+        } else if(tab1[zi][zx] == '?') { // jesli na polu jest juz pytajnik to go zdejmujemy
+
+            tab1[zi][zx] = 219; // ustawiamy zasloniete pole
+
+        }
+
+        liczba_ruchow++;
+
+        run_game();
+
+    }
+
+
+    }	
+
+}
+
+
+/**********************************************************************************************/
+
+
+void odslon_pola_wokol(int zi, int zx) {
+
+    
+
+    //zi>=0 && zi<ry && zx>=0 && zx<rx
+
+    if(tab1[zi][zx] == char(219) || tab1[zi][zx] == 'F' || tab1[zi][zx] == '?') { //w tablicy widocznej jest polem zaslonietym/F/? to odslon go
+
+        tab1[zi][zx] = tab0[zi][zx];
+
+    
+
+        if(tab0[zi][zx] == char(176)) { //jesli pole jest puste w tablicy ukrytej to odslon pola wokol niego		
+
+            int zi_p1 = zi+1;
+
+            int zi_m1 = zi-1;
+
+            int zx_p1 = zx+1;
+
+            int zx_m1 = zx-1;
+
+            
+
+            
+
+            if(zi_m1>=0 && zx_m1>=0) {
+
+                odslon_pola_wokol(zi_m1,zx_m1); //gora lewo
+
+            }
+
+            if(zi_m1>=0) {
+
+                odslon_pola_wokol(zi_m1,zx); // gora
+
+            }
+
+            if(zi_m1>=0 && zx_p1<rx) {
+
+                odslon_pola_wokol(zi_m1,zx_p1); // gora prawo
+
+            }
+
+    
+
+            if(zi_p1<ry && zx_m1>=0) {
+
+                odslon_pola_wokol(zi_p1,zx_m1); // dol lewo
+
+            }
+
+            if(zi_p1<ry) {
+
+                odslon_pola_wokol(zi_p1,zx); // dol 
+
+            }
+
+            if(zi_p1<ry && zx_p1<rx) {
+
+                odslon_pola_wokol(zi_p1,zx_p1); // dol prawo
+
+            }	
+
+            
+
+            if(zx_m1>=0) {
+
+                odslon_pola_wokol(zi,zx_m1); // lewo		
+
+            }
+
+            if(zx_p1<rx) {
+
+                odslon_pola_wokol(zi,zx_p1); // prawo
+
+            }
+
+            
+
+        }
+
+    }
+
+
+}
