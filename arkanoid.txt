@@ -3,6 +3,7 @@ from tkinter import Frame, BOTH, Canvas
  
 root = tkinter.Tk()
 root.geometry("800x600")
+Pong (root)
 root.mainloop()  
 
 class Pong(Frame):
@@ -33,7 +34,6 @@ class Pong(Frame):
         self.textLabel = self.canvas.create_text(self.winWIDTH/2,10, text=str(self.player1Points)+" | "+str(self.player2Points))
         self.canvas.pack(fill=BOTH, expand=1)
 
-Pong(root)
 
   ballDX = 2
     ballDY = -2
