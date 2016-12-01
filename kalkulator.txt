@@ -22,6 +22,7 @@ przel.uruchom();
 system("pause");
 return 0;
 }
+
 przelicznik::przelicznik(void){
 x=0;y=0;
 };
@@ -60,6 +61,7 @@ cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return (x+y)*(x*x-x*y+y*y);
 };
+
 void przelicznik::uruchom(void){
 cout<;<;"KALKULATOR"<;
 cout<;<; "wybierz wzor skroconego mnozenia"<;<; endl;
