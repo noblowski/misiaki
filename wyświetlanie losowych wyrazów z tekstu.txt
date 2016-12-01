@@ -1,0 +1,132 @@
+
+//zawartoœæ pliku tekstowego
+/*
+Yo ho, yo ho, a pirate's life for me.
+We pillage, we plunder, we rifle, and loot,
+Drink up, me 'earties, yo ho.
+We kidnap and ravage and don't give a hoot,
+Drink up me 'earties, yo ho.
+Yo ho, yo ho, a pirate's life for me.
+We extort, we pilfer, we filch, and sack,
+Drink up, me 'earties, yo ho.
+Maraud and embezzle, and even high-jack,
+Drink up, me 'earties, yo ho.
+
+Yo ho, yo ho, a pirate's life for me.
+We kindle and char, inflame and ignite,
+Drink up, me 'earties, yo ho.
+We burn up the city, we're really a fright,
+Drink up, me 'earties, yo ho.
+
+We're rascals, scoundrels, villans, and knaves,
+Drink up, me 'earties, yo ho.
+We're devils and black sheep, really bad eggs,
+Drink up, me 'earties, yo ho.
+
+Yo ho, yo ho, a pirate's life for me.
+We're beggars and blighters, ne'er-do-well cads,
+Drink up, me 'earties, yo ho.
+Aye, but we're loved by our mommies and dads,
+Drink up, me 'earties, yo ho.
+*/
+
+//interfejs
+package package1;
+
+public interface Talking {
+        public String talk(int minLen);
+
+}
+
+//silnik programu
+package package1;
+
+import java.io.*;
+import java.util.*;
+
+
+public class Pirate implements Talking{
+        public String file;
+        private ArrayList <Pirates2> pirates2;
+
+       
+        public Pirate(String f) {
+                pirates2=new ArrayList<Pirates2>();
+                file=f;
+        }
+        public String talk(int i){
+                String output=" ";
+                load();
+                Random rand = new Random();
+                for (int q=0; q<i; q++){
+                        int index=rand.nextInt(pirates2.size());
+                        output+=" "+pirates2.get(index);
+                        if(output.length()>i)
+                        break;
+                }
+                return output;
+        }
+        public void load() {
+                Scanner infile;
+                try {
+                        infile = new Scanner(new InputStreamReader (new FileInputStream(file)));
+                for (int i=0; i<150; i++){
+                        String n = infile.next();
+                        Pirates2 w = new Pirates2(n);
+                        pirates2.add(w);
+                }
+                infile.close();
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+        }
+        public void add(Pirates2 w) {
+        pirates2.add(w);
+     }
+        public void all()
+        {
+                System.out.println(pirates2.size());
+                //pirates2.shuffle();
+                for(Pirates2 w:pirates2)
+                {
+                        System.out.println(w.toString());
+                }
+        }
+
+}
+
+//sterowanie programem (driver)
+package package1;
+
+import junit.framework.TestCase;
+
+
+public class Tests extends TestCase {
+        public static void main (String args[]) {
+                                Talking pirate = new Pirate("pirate.txt");
+                System.out.println(pirate.talk(20)); //liczba s³ów to 20
+ }
+}
+
+//kod dla jednej pod klasy programu:
+package package1;
+public class Pirates2 {
+private String words;
+public Pirates2()
+{
+words = "unknown";
+}
+public Pirates2(String n)
+{
+words=n;
+}
+public String getWords() {
+return words;
+}
+public String toString() {
+return words;
+}
+public void setWords(String w){
+words=w;
+}
+}
