@@ -18,6 +18,10 @@ class Pong(Frame):
     player2Points = 0
     textLabel = 0
 
+    ballDX = 2
+    ballDY = -2
+    paddleSpeed = 15
+
  def __init__(self, parent):
         Frame.__init__(self, parent)   
         self.parent = parent
@@ -35,9 +39,6 @@ class Pong(Frame):
 
 Pong(root)
 
-  ballDX = 2
-    ballDY = -2
-    paddleSpeed = 15
 
  def key(self, event):
         if event.char == 'w':
