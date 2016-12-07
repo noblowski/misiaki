@@ -110,7 +110,8 @@ public class Tests extends TestCase {
 
 //kod dla jednej pod klasy programu:
 package package1;
-public class Pirates2 {
+public class Pirates2 
+{
 private String words;
 public Pirates2()
 {
@@ -120,13 +121,16 @@ public Pirates2(String n)
 {
 words=n;
 }
-public String getWords() {
+public String getWords() 
+{
 return words;
 }
-public String toString() {
+public String toString() 
+{
 return words;
 }
-public void setWords(String w){
+public void setWords(String w)
+{
 words=w;
 }
 }
