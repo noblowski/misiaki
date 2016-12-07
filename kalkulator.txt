@@ -1,7 +1,8 @@
 #include  <; iostream >;;
 
 using namespace std;
-class przelicznik{
+class przelicznik
+{
 private:
 int x,y;
 public:
@@ -18,60 +19,70 @@ int wzor1(int a, int b);
 float wzor1(float a, float b);
 };
 
-int main(){
+int main()
+{
 przelicznik przel;
 przel.uruchom();
 system("pause");
 return 0;
 }
 
-przelicznik::przelicznik(void){
+przelicznik::przelicznik(void)
+{
 x=0;y=0;
 };
 
-int przelicznik:: wzor1(void){
+int przelicznik:: wzor1(void)
+{
 cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return x*x+2*x*y+y*y;
 };
 
-int przelicznik:: wzor2(void){
+int przelicznik:: wzor2(void)
+{
 cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return x*x-2*x*y+y*y;
 };
 
-int przelicznik:: wzor3(void){
+int przelicznik:: wzor3(void)
+{
 cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return (x-y)*(x+y);
 };
 
-int przelicznik:: wzor4(void){
+int przelicznik:: wzor4(void)
+{
 cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return x*x*x+3*x*x*y+3*x*y*y+y*y*y;
 };
 
-int przelicznik:: wzor5(void){
+int przelicznik:: wzor5(void)
+{
 cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return x*x*x-3*x*x*y+3*x*y*y-y*y*y;
 };
 
-int przelicznik:: wzor6(void){
+int przelicznik:: wzor6(void)
+{
 cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return (x-y)*(x*x+x*y+y*y);
 };
 
-int przelicznik:: wzor7(void){
+int przelicznik:: wzor7(void)
+{
 cout<;<;"podaj x="; cin>;>; x;
 cout<;<;"podaj y="; cin>;>; y;
 return (x+y)*(x*x-x*y+y*y);
 };
 
-void przelicznik::uruchom(void){
+void przelicznik::uruchom(void)
+{
 cout<;<;"KALKULATOR"<;
 cout<;<; "wybierz wzor skroconego mnozenia"<;<; endl;
 cout<;<;" 1. (a+b)^2 "<;<; endl;
@@ -84,7 +95,8 @@ cout<;<;" 7. a^3+b^3"<;<; endl;
 
 int m;
 cin >;>; m;
-switch(m){
+switch(m)
+{
 case 1 : cout <;<; "wynik= "<;<; przelicznik::wzor1()<;<; endl;
 break;
 case 2 : cout <;<; "wynik="<;<; przelicznik::wzor2()<;<; endl;
