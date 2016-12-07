@@ -26,7 +26,7 @@ cout<<"\n transponowana m. A";
          {cout<<"    "<<A[j][i];}}                        //[i][j] -> [j][i] - transponowanie macierzy A
            
            
-float detA=(A[0][0]*A[1][1]*A[2][2])+(A[0][1]*A[1][2]*A[2][0])+(A[0][2]*A[1][0]*A[2][1])       //wyliczenie wyznacznika macierz A
+float detA=(A[0][0]*A[1][1]*A[2][2])+(A[0][1]*A[1][2]*A[2][0])+(A[0][2]*A[1][0]*A[2][1])       //wyliczenie wyznacznika macierzy A
         -(A[2][0]*A[1][1]*A[0][2])-(A[2][1]*A[1][2]*A[0][0])-(A[2][2]*A[1][0]*A[0][1]);
 
 cout<<"\n\n\n    detA = "<<detA<<"\n\n\n";
