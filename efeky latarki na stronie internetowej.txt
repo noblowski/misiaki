@@ -8,7 +8,6 @@
 <SCRIPT TYPE="text/jscript" LANGUAGE="JScript">
 <!--
 
-
 var statusbar = "Kliknij, aby zmieniæ kolor œwiat³a";
 
 var przegladarka = navigator.userAgent;
@@ -48,7 +47,7 @@ function lightChange()
     // Zmiana koloru œwiat³a:
     // obiekt.ChangeColor(nr, R,G,B, 1);
     document.body.filters.Light.ChangeColor(0, Math.floor(Math.random()*100)+155,Math.floor(Math.random()*100)+155,Math.floor(Math.random()*100)+155, 1);
-    // Zmiana natê¿enia œwiat³a:
+    // Zmiana jasnoœci œwiat³a:
     // obiekt.ChangeStrength(nr, natê¿enie, 1);
   }
 }
