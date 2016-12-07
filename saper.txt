@@ -1,259 +1,167 @@
 #include "stdafx.h"
-
 #include <iostream>
-
 #include <string>
-
 #include <ctime> // time()
-
 #include <conio.h> // zawiera funkcja getch()
-
 #include <Windows.h> // zawiera funkcje Sleep()
-
 #include <fstream>
-
-
 using namespace std; // otwarcie przestrzeni nazw
 
 
-//#############################################################################################/
+//#############################################################################/
 
 // zmienne globalne
-
 int ry, rx; // ry - rozmiar na osi y (liczba wierszy), rx - rozmiar na osi x (liczba kolumn)
-
 int liczba_min; // zawiera informacje o liczbie min na planszy
-
 string imie; // imie gracza
-
 int liczba_flag;
-
-
 char **tab0; // tablica ukryta zawierajaca bomby itd
-
 char **tab1; // tablica ktora widzi gracz
 
 
-//#############################################################################################/
+//#############################################################################/
 
 // funkcje w programie
-
 void color(int i=0);
-
 void clear_screen();
-
 void menu_drugie(int parametr);
-
 void menu_glowne(int i=0);
-
 void run_game(int komunikat=0);
-
 void odslon_pola_wokol(int zi, int zx);
 
 
-//#############################################################################################/
+//#############################################################################/
 
-//#############################################################################################/
 
 
 // Funkcja main
 
 int _tmain(int argc, _TCHAR* argv[])
-
 {	
-
-    
-
     //intro
 
 cout<<"     _______.     ___      .______    _______ .______ n";
-
 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-
 cout<<"    /       |    /   \     |   _  \  |   ____||   _  \ n";
-
 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
-
 cout<<"   |   (----`   /  ^  \    |  |_)  | |  |__   |  |_)  | n"; 
-
 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
-
 cout<<"    \   \      /  /_\  \   |   ___/  |   __|  |      / n";   
-
 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
-
 cout<<".----)   |    /  _____  \  |  |      |  |____ |  |\  \----. n";
-
 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-
 cout<<"|_______/    /__/     \__\ | _|      |_______|| _| `._____|";
-
 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
-
 cout<<"nn2009 (c) webook.pl";
-
 color();
 
-        
-
     cout<<"nnnnloading";
-
-    for(int i=0; i<10; i++) {
-
+    for(int i=0; i<10; i++) 
+	{
         cout<<".";
-
         Sleep(500);
-
-    }
-
-    
+	}
 
     menu_glowne();
-
-
     //cout<<"nn";
-
     //system("pause");
-
     return 0;
-
 }
 
 
+<<<<<<< HEAD
+=======
+//#############################################################################################/
+
+
+>>>>>>> 720a782a362e1fe0192081f8c8638a095c500829
 // Funkcje programu
 
 
-void color(int i) { // funkcja wlacza kolorowanie napisow drukowanych przez cout
+void color(int i) 
+{ 
+    // funkcja wlacza kolorowanie napisow drukowanych przez cout
 
     if(i==1) { // czerwony
-
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
-
     } else if(i==2) { // bialy
-
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);	
-
     } else if(i==3) { // zielony
-
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN); 
-
     } else if(i==4) { // niebieski
-
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_BLUE); 	
-
     } else if(i==5) { // czarno na bialym
-
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | FOREGROUND_INTENSITY | BACKGROUND_GREEN | BACKGROUND_BLUE); 
-
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | FOREGROUND_INTENSITY | BACKGROUND_GREEN | BACKGROUND_BLUE);
     } else { // domyslny kolor tekstu w konsoli
-
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),  FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-
     }
 
 }
 
 
-/**********************************************************************************************/
+/******************************************************************************/
 
 
-int get_int(string strConvert) {
+int get_int(string strConvert) 
+{
 
     int intReturn;
 
-    //http://www.techbytes.ca/techbyte99.html
-
+     //http://www.techbytes.ca/techbyte99.html
      // NOTE: You should probably do some checks to ensure that
-
      // this string contains only numbers. If the string is not
-
      // a valid integer, zero will be returned.
-
+     
      intReturn = atoi(strConvert.c_str());
-
-
      return(intReturn);
 
 }
 
 
-/**********************************************************************************************/
+/******************************************************************************/
 
 
-void clear_screen() { // czyscimy ekran i pozostawiamy tylko linie z nazwa programu
+void clear_screen() 
+{ 
+    // czyscimy ekran i pozostawiamy tylko linie z nazwa programu
 
     system("cls");
-
-    
-
     color();
-
     cout<<"====== Saper v1.01 08.01.2010 Webook.pl ======n";	
 
         //<<"Legenda:n"
 
     color(2);
-
     cout<<"Strzalki";
-
     color();
-
     cout<<" - sterowanie w menu gry i po planszyn"; // 75-lewo 77-prawo 72-gora 80-dol
-
     color(2);
-
     cout<<"Spacja";
-
     color();
-
     cout<<" - odslon pole,        "; //32
-
     color(2);
-
     cout<<"ESC";
-
     color();
-
     cout<<" - wyjscie do menun"; //27
-
     color(2);	
-
     cout<<"?";
-
     color();
-
     cout<<" - pytajnik (klawisz V)     "; //118-v 
-
     color(2);
-
     cout<<"F";
-
     color();
-
     cout<<" - flaga (klawisz F),  "; //102-f
-
     color(2);
-
     cout<<char(42);
-
     color();
-
     cout<<" - minan";	//42 - mina
-
     color(2);		
-
     cout<<char(219);
-
     color();
-
     cout<<" - zasloniete pole,         ";
-
     color(2);
-
     cout<<char(176);
-
     color();
-
     cout<<" - odsloniete puste polen"		
 
         <<"=============================================================nn";
@@ -261,7 +169,7 @@ void clear_screen() { // czyscimy ekran i pozostawiamy tylko linie z nazwa progr
 }
 
 
-/**********************************************************************************************/
+/******************************************************************************/
 
 
 void menu_glowne(int i) 
@@ -270,51 +178,39 @@ void menu_glowne(int i)
 
     clear_screen();	
 
-    
-
     char nawigacja;
-
 
     cout<<"MENU:nWybierz pozycje za pomoca strzalek i entera.n" //enter - odczytujemy jako powrot karetki znak 13 http://www.asciitable.com/
 
         << "n- NOWA GRA ";
 
-        if(i == 0) {
-
+        if(i == 0) 
+	{
             color(1);
-
             cout<<"          <---";
-
             color();
-
         }
 
     cout<< "n- LISTA ROZGRYWEK  ";
 
-        if(i == 1) {
-
+        if(i == 1) 
+	{
             color(1);
-
             cout<<" <---";
-
             color();
-
         }
 
     cout<< "n- WYJSCIE ";
 
-        if(i == 2) {
-
+        if(i == 2) 
+	{
             color(1);
-
             cout<<"         <---n"; // znak zachety ponizej
-
             color();
-
-        } else {
-
+        }
+	else 
+	{
             cout<<endl; // przesuwa znak zachety ponizej menu, by bylo estetycznie
-
         }
 
 
@@ -329,54 +225,57 @@ void menu_glowne(int i)
         
 
 
-    if(nawigacja == 80) { // w dol
+    if(nawigacja == 80) 
+{ 
+	// w dol
 
-        if(i >= 2) {
-
+        if(i >= 2) 
+	{
             i = 0;
-
-        } else {
-
+        } 
+	else 
+	{
             i++;
-
         }
 
         menu_glowne(i);
 
-    } else if(nawigacja == 72) { // w gore
+    } else if(nawigacja == 72) 
+	{ 
+	   // w gore
 
-        if(i <= 0) {
-
+        if(i <= 0) 
+	{
             i = 2;
-
-        } else {
-
+        } 
+	else 
+	{
             i--;
-
         }
 
         menu_glowne(i);
 
     } else if(nawigacja == 13) { //enter
 
-        if(i != 2) { // jesli nie wybrano wyjscia to wlacz dane podmenu
+        if(i != 2) 
+	{ 
+	   // jesli nie wybrano wyjscia to wlacz dane podmenu
 
             menu_drugie(i);
-
         }
 
-    } else {
-
-        menu_glowne(i);
-
     }
+	else 
+	{
+        menu_glowne(i);
+	}
 
     
 
 }
 
 
-/**********************************************************************************************/
+/******************************************************************************/
 
 
 void menu_drugie(int parametr) {
@@ -1103,7 +1002,7 @@ void menu_drugie(int parametr) {
 }
 
 
-/**********************************************************************************************/
+/******************************************************************************/
 
 
 void run_game(int komunikat) {
@@ -1610,7 +1509,7 @@ void run_game(int komunikat) {
 }
 
 
-/**********************************************************************************************/
+/******************************************************************************/
 
 
 void odslon_pola_wokol(int zi, int zx) {
