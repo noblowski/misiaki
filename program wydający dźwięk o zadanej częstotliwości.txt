@@ -1,18 +1,22 @@
 #include <iostream>
 #include <windows.h>
-  #include <conio.h>
+#include <conio.h>
      
 using namespace std;
  
-double pobierz(int liczba){
-       while(!(cin>>liczba)){
-            cout << "Podaj poprawna wartosc: ";
-  cin.clear(); 
-  cin.sync();}
-  return liczba;
-       }
+double pobierz(int liczba)
+ {
+       while(!(cin>>liczba))
+  {
+   cout << "Podaj poprawna wartosc: ";
+   cin.clear(); 
+   cin.sync();
+  }
+   return liczba;
+ }
  
-int main() {
+int main() 
+{
       start:
     system("title SoundSkan");
   cout << "SoundSkan by Jasiek65"  << endl;
@@ -32,10 +36,10 @@ system("color 02");
     for(int a=min; a<max; a= a+interwal)
     {
     
-             cout<< "Aktualna czestotliwosc: "<< a << endl;
-              Beep(a,200);
-              system("cls");
-             }
+     cout<< "Aktualna czestotliwosc: "<< a << endl;
+     Beep(a,200);
+     system("cls");
+    }
      
      
     cout << "Wytrzymales? Zakonczyc? T/N";
