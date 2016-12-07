@@ -54,7 +54,7 @@ int main()
  
   for(;;)
   {
-    printf("Podaj liczbe arabska: ");
+    printf("Podaj liczbe arabska, ktora chcesz przeliczyæ: ");
    
         scanf("%d", &liczba);
    
