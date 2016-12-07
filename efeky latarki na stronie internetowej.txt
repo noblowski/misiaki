@@ -8,7 +8,7 @@
 <SCRIPT TYPE="text/jscript" LANGUAGE="JScript">
 <!--
 
-var statusbar = "Kliknij, aby zmieniæ kolor œwiata";
+var statusbar = "Kliknij, aby zmieniæ kolor œwiata" ;
 
 var przegladarka = navigator.userAgent;
 var ie_ver = 0;
