@@ -8,6 +8,8 @@
 using namespace std; // otwarcie przestrzeni nazw
 
 
+
+
 //#############################################################################/
 
 // zmienne globalne
@@ -19,6 +21,7 @@ char **tab0; // tablica ukryta zawierajaca bomby itd
 char **tab1; // tablica ktora widzi gracz
 
 
+
 //#############################################################################/
 
 // funkcje w programie
@@ -28,6 +31,7 @@ void menu_drugie(int parametr);
 void menu_glowne(int i=0);
 void run_game(int komunikat=0);
 void odslon_pola_wokol(int zi, int zx);
+
 
 
 //#############################################################################/
