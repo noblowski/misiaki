@@ -8,7 +8,7 @@
 <SCRIPT TYPE="text/jscript" LANGUAGE="JScript">
 <!--
 
-var statusbar = "Kliknij, aby zmieniæ kolor œwiat³a";
+var statusbar = "Kliknij, aby zmieniæ kolor œwiata";
 
 var przegladarka = navigator.userAgent;
 var ie_ver = 0;
@@ -23,7 +23,7 @@ function lightStart()
   if (ie_ver >= 4)
   {
     document.body.style.filter = "Light";
-    // Œwiat³o punktowe:
+    // Œwiat punktowy:
     // obiekt.addPoint(x,y,z, R,G,B, natê¿enie);
     document.body.filters.Light.addPoint(300,150,150, Math.floor(Math.random()*100)+155,Math.floor(Math.random()*100)+155,Math.floor(Math.random()*100)+155, 100);
     window.defaultStatus = statusbar;
@@ -34,7 +34,7 @@ function lightMove()
 {
   if (ie_ver >= 4 && document.body.filters.Light)
   {
-    // Przemieszczanie œwiat³a:
+    // Przemieszczanie œwiata:
     // obiekt.MoveLight(nr, x,y,z, 1);
     document.body.filters.Light.MoveLight(0, window.event.x,window.event.y,150, 1);
   }
@@ -44,10 +44,10 @@ function lightChange()
 {
   if (ie_ver >= 4 && document.body.filters.Light)
   {
-    // Zmiana koloru œwiat³a:
+    // Zmiana koloru œwiata:
     // obiekt.ChangeColor(nr, R,G,B, 1);
     document.body.filters.Light.ChangeColor(0, Math.floor(Math.random()*100)+155,Math.floor(Math.random()*100)+155,Math.floor(Math.random()*100)+155, 1);
-    // Zmiana jasnoœci œwiat³a:
+    // Zmiana jasnoœci œwiata:
     // obiekt.ChangeStrength(nr, natê¿enie, 1);
   }
 }
